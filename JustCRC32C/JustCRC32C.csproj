@@ -15,23 +15,28 @@
         <RepositoryUrl>https://github.com/bartimaeusnek/Just-CRC32C</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>CRC32C</PackageTags>
-        <Version>1.1.0</Version>
+        <Version>1.2.0</Version>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <TargetFrameworks>net5.0;net6.0;net7.0;net8.0;netcoreapp3.1;netstandard2.0</TargetFrameworks>
         <LangVersion>10</LangVersion>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
     
-    <ItemGroup Condition="$(TargetFramework) == 'netstandard2.0'">
-        <PackageReference Include="System.Memory" Version="4.5.5" />
-        <None Remove="libJustCRC32C_Native.dll" />
-        <EmbeddedResource Include="libJustCRC32C_Native.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <ItemGroup>
+        <EmbeddedResource Include="JustCRC32C_Native_x64.dll">
+          <Pack>true</Pack>
+          <PackagePath>lib\netstandard2.0</PackagePath>
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
+        <EmbeddedResource Include="JustCRC32C_Native_x86.dll">
+          <Pack>true</Pack>
+          <PackagePath>lib\netstandard2.0</PackagePath>
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <PackageReference Include="System.Memory" Version="4.5.5" />
     </ItemGroup>
     
     <ItemGroup>
-        <None Include="libJustCRC32C_Native.dll" Pack="true" PackagePath="\lib\netstandard2.0"/>
         <None Include="..\README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
@@ -46,7 +51,7 @@
     </PropertyGroup>
 
     <ItemGroup Label="ItemGroup-SourceLink">
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
     </ItemGroup>
     
     <ItemGroup>
@@ -82,4 +87,8 @@
       </Compile>
     </ItemGroup>
     
+    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+      <Exec Condition="$([MSBuild]::IsOSPlatform('Windows')) And $(TargetFramework) == 'netstandard2.0'" Command="powershell.exe $(MSBuildProjectDirectory)\..\JustCRC32C.Native\build.ps1" />
+      <Exec Condition="$([MSBuild]::IsOSPlatform('Linux')) And $(TargetFramework) == 'netstandard2.0'" Command="./$(MSBuildProjectDirectory)/../JustCRC32C.Native/build.sh" />
+    </Target>
 </Project>

@@ -11,36 +11,32 @@ public static partial class Crc32C
     internal unsafe static uint CalculateHardware(Span<byte> data)
     {
         fixed (byte* ptr = &data.GetPinnableReference())
-            return CRC32_SSE42_Native_x32(ptr, data.Length);
+            return CRC32_SSE42_Native_x86(ptr, data.Length);
     }
+    
     static Crc32C()
     {
-        //.netstandard2.0 will only support windows hardware intrinsics.
         bool isAnyWindows = (Environment.OSVersion.Platform == PlatformID.Win32NT || Environment.OSVersion.Platform == PlatformID.Win32Windows || Environment.OSVersion.Platform == PlatformID.WinCE);
-        if (!isAnyWindows || !HasSSE42())
+        ToUse = RuntimeInformation.ProcessArchitecture switch
         {
-            ToUse = CalculateSoftware;
-        }
-        else
-        {
-            if (RuntimeInformation.ProcessArchitecture == Architecture.X64)
-            {
-                ToUse = CalculateHardwareX64;
-            }
-            else
-            {
-                ToUse = CalculateHardware;
-            }
-        }
+            Architecture.X64 when !isAnyWindows || !HasSSE42_x64() => CalculateSoftware,
+            Architecture.X64 => CalculateHardwareX64,
+            Architecture.X86 when !isAnyWindows || !HasSSE42_x86() => CalculateSoftware,
+            Architecture.X86 => CalculateHardware,
+            _ => CalculateSoftware
+        };
     }
     
-    [DllImport("libJustCRC32C_Native.dll", CallingConvention = CallingConvention.Cdecl)]
-    internal extern static bool HasSSE42();
+    [DllImport("JustCRC32C_Native_x86.dll", CallingConvention = CallingConvention.StdCall)]
+    internal extern static bool HasSSE42_x86();
     
-    [DllImport("libJustCRC32C_Native.dll", CallingConvention = CallingConvention.Cdecl)]
+    [DllImport("JustCRC32C_Native_x64.dll", CallingConvention = CallingConvention.StdCall)]
+    internal extern static bool HasSSE42_x64();
+    
+    [DllImport("JustCRC32C_Native_x64.dll", CallingConvention = CallingConvention.StdCall)]
     internal extern unsafe static ulong CRC32_SSE42_Native_x64(byte* ptr, int ptr_length);
 
-    [DllImport("libJustCRC32C_Native.dll", CallingConvention = CallingConvention.Cdecl)]
-    internal extern unsafe static uint CRC32_SSE42_Native_x32(byte* ptr, int ptr_length);
+    [DllImport("JustCRC32C_Native_x86.dll", CallingConvention = CallingConvention.StdCall)]
+    internal extern unsafe static uint CRC32_SSE42_Native_x86(byte* ptr, int ptr_length);
 }
 #endif

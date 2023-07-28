@@ -7,3 +7,5 @@ riderModule.iml
 *.user
 .vs/
 cmake-build-*/
+*.dll
+fasm/

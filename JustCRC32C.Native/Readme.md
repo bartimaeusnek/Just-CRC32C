@@ -1,5 +1,5 @@
 ## JustCRC32C.Native
-Simple ANSI-C wrapper for CRC32C intrinsics. Should be buildable with anything? IDK i'm a C# Dev.  
-I've compiled it with CLion, Ninja and MinGW in release mode.
+Simple FASM wrapper for CRC32, produces a x64 and a x86 library.
+Will be build during regular build.
 
 Same LICENSE as JustCRC32C; LGPLv3, if this is even license-able.

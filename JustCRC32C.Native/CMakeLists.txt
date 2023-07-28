@@ -1,5 +1,0 @@
-cmake_minimum_required(VERSION 3.25)
-project(JustCRC32C_Native C)
-set(CMAKE_C_STANDARD 90)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msse4.2 -Ofast")
-add_library(JustCRC32C_Native SHARED library.c)
