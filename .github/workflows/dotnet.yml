@@ -5,22 +5,26 @@ on:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
-
+    runs-on: windows-2022
     steps:
     - uses: actions/checkout@v3
+    - name: Setup fasm
+      uses: stevenwdv/setup-fasm@v1.2.1
+    - name: BuildFasm_x64
+      run: fasm JustCRC32C.Native/JustCRC32C_Native_x64.ASM JustCRC32C/JustCRC32C_Native_x64.dll
+    - name: BuildFasm_x86
+      run: fasm JustCRC32C.Native/JustCRC32C_Native_x86.ASM JustCRC32C/JustCRC32C_Native_x86.dll
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.x.x
-    - name: Build
+    - name: Build dotnet
       run: dotnet build JustCRC32C/JustCRC32C.csproj -c Release
-    - name: Pack
+    - name: Pack dotnet
       run: dotnet pack JustCRC32C/JustCRC32C.csproj -c Release
     - name: Prep packages
       run: dotnet nuget add source --username bartimaeusnek --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/bartimaeusnek/index.json"
     - name: Publish to GitHub packages 
-      run: dotnet nuget push JustCRC32C/bin/Release/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }}  --source "github"
+      run: dotnet nuget push JustCRC32C\bin\Release\*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }}  --source "github"
     - name: Publish to nuget
-      run: dotnet nuget push JustCRC32C/bin/Release/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source 'https://api.nuget.org/v3/index.json'
+      run: dotnet nuget push JustCRC32C\bin\Release\*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source 'https://api.nuget.org/v3/index.json'
