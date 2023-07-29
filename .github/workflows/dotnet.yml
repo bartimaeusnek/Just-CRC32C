@@ -19,8 +19,16 @@ jobs:
       uses: stevenwdv/setup-fasm@v1.2.1
     - name: BuildFasm_x64
       run: fasm JustCRC32C.Native/JustCRC32C_Native_x64.ASM JustCRC32C/JustCRC32C_Native_x64.dll
+    - name: Wait / Sleep
+      uses: jakejarvis/wait-action@v0.1.1
+      with:
+        time: 10s
     - name: BuildFasm_x86
       run: JustCRC32C.Native/JustCRC32C_Native_x86.ASM JustCRC32C/JustCRC32C_Native_x86.dll
+    - name: Wait / Sleep
+      uses: jakejarvis/wait-action@v0.1.1
+      with:
+        time: 10s
     - name: Build
       run: dotnet build JustCRC32C/JustCRC32C.csproj -c Release
     - name: Pack
