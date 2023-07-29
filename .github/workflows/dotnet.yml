@@ -14,6 +14,25 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.x.x
+
+    - name: Setup fasm
+      uses: stevenwdv/setup-fasm@v1.2.1
+      with:
+        edition: fasmg
+        fasmg-download-packages: true
+        fasmg-include-packages: x86
+    - name: BuildFasm
+      run: fasm JustCRC32C.Native/JustCRC32C_Native_x64.ASM JustCRC32C.Native/JustCRC32C_Native_x86.ASM
+    - name: Copy x64
+      uses: canastro/copy-action@0.0.2
+      with:
+        source: JustCRC32C.Native/JustCRC32C_Native_x64.dll
+        target: JustCRC32C/JustCRC32C_Native_x64.dll
+    - name: Copy x86
+      uses: canastro/copy-action@0.0.2
+      with:
+        source: JustCRC32C.Native/JustCRC32C_Native_x86.dll
+        target: JustCRC32C/JustCRC32C_Native_x86.dll
     - name: Build
       run: dotnet build JustCRC32C/JustCRC32C.csproj -c Release
     - name: Pack
