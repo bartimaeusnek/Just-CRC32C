@@ -27,7 +27,7 @@ public static partial class Crc32C
         };
     }
     
-    [DllImport("JustCRC32C_Native_x86.dll", CallingConvention = CallingConvention.StdCall)]
+    [DllImport("JustCRC32C_Native_x86.dll", CallingConvention = CallingConvention.Cdecl)]
     internal extern static bool HasSSE42_x86();
     
     [DllImport("JustCRC32C_Native_x64.dll", CallingConvention = CallingConvention.StdCall)]
@@ -36,7 +36,7 @@ public static partial class Crc32C
     [DllImport("JustCRC32C_Native_x64.dll", CallingConvention = CallingConvention.StdCall)]
     internal extern unsafe static ulong CRC32_SSE42_Native_x64(byte* ptr, int ptr_length);
 
-    [DllImport("JustCRC32C_Native_x86.dll", CallingConvention = CallingConvention.StdCall)]
+    [DllImport("JustCRC32C_Native_x86.dll", CallingConvention = CallingConvention.Cdecl)]
     internal extern unsafe static uint CRC32_SSE42_Native_x86(byte* ptr, int ptr_length);
 }
 #endif

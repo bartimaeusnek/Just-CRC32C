@@ -1,4 +1,4 @@
-format PE64 DLL
+﻿format PE64 DLL
 include 'win64a.inc'
 
 section '.text' code readable executable
@@ -17,9 +17,6 @@ CRC32_SSE42_Native:
     ; Parameters:
     ; rcx - const unsigned char *ptr
     ; edx - int ptr_length
-
-    ; Function prologue
-    push rsi
 
     ; Initialize crc to 0x00000000FFFFFFFF
     mov rax, 0FFFFFFFFh
@@ -86,7 +83,6 @@ CRC32_SSE42_Native:
     done:
         ; Function epilogue
         not rax ; Negate the CRC value
-        pop rsi
         ret
 
 section '.edata' export readable

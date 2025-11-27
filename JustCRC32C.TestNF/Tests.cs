@@ -40,7 +40,7 @@
                     {
                         b = Crc32C.CRC32_SSE42_Native_x86(ptrA, ba.Length);
                     }
-                    Assert.That(b == c);
+                    Assert.That(b == c, "expected: " + c + " actual: " + b);
                     break;
                 }
                 case Architecture.Arm:
@@ -80,7 +80,7 @@
                 {
                     fixed (byte* ptrB = &bArray[0])
                         b = Crc32C.CRC32_SSE42_Native_x86(ptrB, aArray.Length);
-                    Assert.That(b == c);
+                    Assert.That(b == c, "expected: " + c + " actual: " + b);
                     break;
                 }
                 case Architecture.Arm:
