@@ -5,19 +5,19 @@ on:
 
 jobs:
   build:
-    runs-on: windows-2022
+    runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6.0.0
     - name: Setup fasm
-      uses: stevenwdv/setup-fasm@v1.2.1
+      uses: stevenwdv/setup-fasm@v1.5.0
     - name: BuildFasm_x64
       run: fasm JustCRC32C.Native/JustCRC32C_Native_x64.ASM JustCRC32C/JustCRC32C_Native_x64.dll
     - name: BuildFasm_x86
       run: fasm JustCRC32C.Native/JustCRC32C_Native_x86.ASM JustCRC32C/JustCRC32C_Native_x86.dll
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: 8.x.x
+        dotnet-version: 10.x.x
     - name: Build dotnet
       run: dotnet build JustCRC32C/JustCRC32C.csproj -c Release
     - name: Pack dotnet
