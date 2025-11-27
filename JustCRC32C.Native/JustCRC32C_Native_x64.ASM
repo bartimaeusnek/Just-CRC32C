@@ -1,4 +1,4 @@
-﻿format PE64 DLL
+format PE64 DLL
 include 'win64a.inc'
 
 section '.text' code readable executable
